@@ -1,0 +1,92 @@
+'use strict';
+
+var React = require('react-native');
+var Welcome = require('./welcom.ios');
+var More = require('./more.ios');
+
+var {
+  StyleSheet,
+  AppRegistry,
+  Text,
+  View,
+  TabBarIOS,
+  Component
+} = React;
+
+class TabDM extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      selectedTab: 'welcome'
+    };
+  }
+
+  render() {
+    return (
+    <View style={{flex:1}}>
+      <TabBarIOS selectedTab={this.state.selectedTab}
+      style={{ width:260,height:300,alignItems:'center',borderRadius:20,justifyContent:'center',backgroundColor: '#7896EE' }}>  
+        <TabBarIOS.Item
+          selected={this.state.selectedTab === 'welcome'}
+          icon={{uri:'featured'}}
+          title="featured"
+          onPress={() => {
+              this.setState({
+                  selectedTab: 'welcome',
+              });
+          }}>
+
+            <Welcome/>
+        </TabBarIOS.Item>
+        <TabBarIOS.Item
+          selected={this.state.selectedTab === 'more'}
+          title="More"
+   //       style={{width:130,height:300,alignItems:'center'}}
+          onPress={() => {
+                this.setState({
+                    selectedTab: 'more',
+                });
+          }}>
+          <More/>
+        </TabBarIOS.Item>
+      </TabBarIOS>
+      </View>
+    );
+  }
+}
+var styles= StyleSheet.create({
+    bigtab:{
+    backgroundColor:'#7896EE', 
+    height:50, 
+    justifyContent: 'center', 
+    alignItems:'center',
+  },
+  smtab:{
+    borderRadius:15,
+    backgroundColor:'#7896EE',
+    alignItems:'center',
+    marginTop:7, 
+    marginBottom:7, 
+    marginLeft:60, 
+    marginRight:60, 
+    width:260, 
+    height:30, 
+    borderColor:'#7896EE'
+  },
+  sstab:{
+    backgroundColor:'blue', width:129, height:29, borderRadius:50, borderColor:'#7896EE', borderWidth:1,
+
+  },
+  tab: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  tabs: {
+    height: 30,
+    flexDirection: 'row',
+
+  },
+});
+
