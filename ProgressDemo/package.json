@@ -1,0 +1,13 @@
+{
+  "name": "ProgressDemo",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start"
+  },
+  "dependencies": {
+    "react-native": "^0.16.0",
+    "react-native-image-progress": "^0.4.0",
+    "react-native-progress-hud": "^1.0.3"
+  }
+}
