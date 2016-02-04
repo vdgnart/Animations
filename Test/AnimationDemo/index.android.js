@@ -104,7 +104,7 @@ class AnimationDemo extends Component {
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>
-          sfgrdhtfjgykhjllkhgf
+          WAY OF THE LIFE
         </Text>
         <Text style={styles.instructions}>
           clclclclclcl

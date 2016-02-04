@@ -211,7 +211,7 @@ var AnimationDemo = React.createClass({
               source={{uri:'http://i.9mobi.vn/cf/images/2015/03/nkk/anh-avatar-dep-16.jpg'}} 
               style={[styles.avatar,this.getScalePositionImage()]}/>
           <AnimatedText style={[styles.userName,this.getScalePositionUsername()]}>
-              Haophungds
+              VDGNART
           </AnimatedText>
           <AnimatedText style={[styles.employEmail,this.getScalePositionEmail()]}>
               Haophungds@appota.com
