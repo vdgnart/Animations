@@ -107,11 +107,10 @@ class AnimationDemo extends Component {
           sfgrdhtfjgykhjllkhgf
         </Text>
         <Text style={styles.instructions}>
-          To get started, edit index.ios.js
+          clclclclclcl
         </Text>
         <Text style={styles.instructions}>
-          Press Cmd+R to reload,{'\n'}
-          Cmd+D or shake for dev menu
+          Du ngay mai co doi lan cach xa
         </Text>
       </View>
     );
