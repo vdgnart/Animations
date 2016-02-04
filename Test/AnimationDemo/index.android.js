@@ -1,77 +1,141 @@
-/**
+  /**
  * Sample React Native App
  * https://github.com/facebook/react-native
  */
 'use strict';
-var React = require('react-native');
-
-
-var {
+import React, {
   AppRegistry,
+  Component,
   StyleSheet,
-  View,
+  Animated,
   Text,
-  Image,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  Animated, 
-  PanResponder,
-  ScrollView
-} = React;
-var rebound = require('rebound');
+  View
+} from 'react-native';
+var {width: deviceWidth, height: deviceHeight} = Dimensions.get('window');
+var videoWidth = deviceWidth,
+    videoHeight = Math.round((deviceWidth/16)*9);
 
-var AnimationDemo = React.createClass({
-  // First we initialize the spring and add a listener, which calls
-  // setState whenever it updates
-  componentWillMount() {
-    // Initialize the spring that will drive animations
-    this.springSystem = new rebound.SpringSystem();
-    this._scrollSpring = this.springSystem.createSpring();
-    var springConfig = this._scrollSpring.getSpringConfig();
-    springConfig.tension = 230;
-    springConfig.friction = 10;
+var AnimatedVideo = Animated.createAnimatedComponent(View);
 
-    this._scrollSpring.addListener({
-      onSpringUpdate: () => {
-        this.setState({scale: this._scrollSpring.getCurrentValue()});
-      },
-    });
-
-    // Initialize the spring value at 1
-    this._scrollSpring.setCurrentValue(1);
-  },
-
-  _onPressIn() {
-    this._scrollSpring.setEndValue(0.5);
-  },
-
-  _onPressOut() {
-    this._scrollSpring.setEndValue(1);
-  },
-
-  render: function() {
-    var imageStyle = {
-      width: 250,
-      height: 200,
-      transform: [{scaleX: this.state.scale}, {scaleY: this.state.scale}],
+class AnimationDemo extends Component {
+  getInitialState: function() {
+    return {
+      rate: 1,
+      volume: 1,
+      muted: true,
+      resizeMode: 'stretch',
+      duration: 0.0,
+      currentTime: 0.0,
+      scale: new Animated.Value(1),
+      position: new Animated.ValueXY(),
     };
-
-    var imageUri = "https://facebook.github.io/react-native/img/ReboundExample.png";
-
+  },
+  _y: 0,
+  componentWillMount: function() {
+    this._panResponder = PanResponder.create({
+      onStartShouldSetPanResponder: (evt, gestureState) => true,
+      onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
+      onMoveShouldSetPanResponder: (evt, gestureState) => true,
+      onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
+      onPanResponderGrant: function() {
+        this.state.position.y.setOffset(this._y)
+      }.bind(this),
+      onPanResponderMove: Animated.event([
+          null, 
+          {
+              dy: this.state.position.y
+          }
+      ]),
+      onPanResponderRelease: (e, gestureState) => {
+        this.state.position.flattenOffset();
+        if (gestureState.dy >= 100) {
+          Animated.timing(this.state.position.y, {
+            duration: 200,
+            toValue: deviceHeight
+          }).start();
+        } else {
+          Animated.timing(this.state.position.y, {
+            duration: 200,
+            toValue: 0
+          }).start();
+        }
+      }.bind(this)
+    });
+    this._scale = this.state.position.y.interpolate({
+      inputRange: [0, deviceHeight ],
+      outputRange: [1, .71],
+      extrapolate: 'clamp'
+    });
+    this._translateY = this.state.position.y.interpolate({
+      inputRange: [0, deviceHeight],
+      outputRange: [0, deviceHeight],
+      extrapolate: 'clamp'
+    });
+    this.state.position.y.addListener((value) => {
+      this._y = value.value;
+      var scaleValue = this._scale.__getAnimatedValue();
+      var currentVideoWidth = scaleValue * videoWidth;
+      var buffer = ((videoWidth - currentVideoWidth)/2);
+      this.state.position.x.setValue(buffer);
+    }.bind(this));
+    this._opacity = this.state.position.y.interpolate({
+      inputRange: [0, deviceHeight ],
+      outputRange: [1, .1]
+    });
+  },
+  getScalePosition: function() {
+    return {
+      transform: [
+        {scale: this._scale},
+        {translateX: this.state.position.x},
+        {translateY: this._translateY}
+      ]
+    }
+  },
+  getScrollOffset: function() {
+    return {
+      transform: [
+        {translateY: this._translateY},
+      ],
+      opacity: this._opacity
+    }
+  },
+  render:function() {
     return (
       <View style={styles.container}>
-        <TouchableWithoutFeedback onPressIn={this._onPressIn}
-                                  onPressOut={this._onPressOut}>
-          <Image source={{uri: imageUri}} style={imageStyle} />
-        </TouchableWithoutFeedback>
+        <Text style={styles.welcome}>
+          sfgrdhtfjgykhjllkhgf
+        </Text>
+        <Text style={styles.instructions}>
+          To get started, edit index.ios.js
+        </Text>
+        <Text style={styles.instructions}>
+          Press Cmd+R to reload,{'\n'}
+          Cmd+D or shake for dev menu
+        </Text>
       </View>
     );
   }
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF',
+  },
+  welcome: {
+    fontSize: 20,
+    textAlign: 'center',
+    margin: 10,
+  },
+  instructions: {
+    textAlign: 'center',
+    color: '#333333',
+    marginBottom: 5,
+  },
 });
-var styles=StyleSheet.create({
-  container:{
-    flex:1
-  }
-})
+
 
 AppRegistry.registerComponent('AnimationDemo', () => AnimationDemo);
